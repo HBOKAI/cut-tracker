@@ -149,6 +149,16 @@ function renderMenuPlan() {
     listItem.append(name, quantity);
     shoppingList.append(listItem);
   });
+
+  const replacementBody = document.getElementById("replacementBody");
+  replacementBody.replaceChildren();
+  (menuPlan.replacements || []).forEach((item) => {
+    const row = document.createElement("tr");
+    [item.item, item.replaces, item.portion, item.howToUse, item.protein, item.carbs, item.fat, item.note].forEach((value, index) => {
+      row.append(cell(value || "—", index === 3 || index === 7 ? "menu-note" : ""));
+    });
+    replacementBody.append(row);
+  });
 }
 
 function cell(text, className = "") {

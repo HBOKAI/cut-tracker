@@ -148,6 +148,8 @@ h2 { margin-bottom: 0; font-size: 21px; letter-spacing: -0.025em; }
 .menu-panel .section-kicker, .weekly-panel .section-kicker { color: var(--teal); }
 .menu-table { min-width: 1010px; }
 .menu-table th, .menu-table td { vertical-align: top; }
+.replacement-table { min-width: 1120px; }
+.replacement-table th, .replacement-table td { vertical-align: top; }
 .menu-note { max-width: 250px; color: var(--muted); white-space: normal; line-height: 1.5; }
 .menu-total { margin-top: 18px; padding: 13px 14px; color: #47716f; border: 1px solid #cce8e0; border-radius: 11px; background: #edf9f5; font-size: 12px; line-height: 1.7; }
 .weekly-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(250px, 0.75fr); gap: 22px; margin-top: 20px; }
