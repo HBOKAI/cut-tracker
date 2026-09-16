@@ -87,6 +87,7 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(len(payload["menuPlan"]["training"]["rows"]), 6)
         self.assertEqual(len(payload["menuPlan"]["rest"]["rows"]), 3)
         self.assertEqual(payload["menuPlan"]["rest"]["rows"][1]["meal"], "下午茶")
+        self.assertIn("樂維根", payload["menuPlan"]["rest"]["rows"][1]["other"])
         self.assertEqual(len(payload["menuPlan"]["weekly"]), 7)
         self.assertEqual(len(payload["menuPlan"]["shopping"]), 7)
         self.assertEqual(len(payload["menuPlan"]["replacements"]), 3)
