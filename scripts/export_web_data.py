@@ -15,6 +15,7 @@ ROOT = SCRIPT_DIR.parent
 DEFAULT_WORKBOOK = ROOT / "data" / "減脂追蹤.xlsx"
 DEFAULT_OUTPUT = ROOT / "docs" / "data.json"
 TARGET_ROWS = {"Calories": 12, "Protein": 13, "Carbs": 14, "Fat": 15}
+MENU_HEADERS = ["time", "meal", "chicken", "rice", "riceCup", "other", "greens", "note"]
 
 
 def as_date(value) -> date | None:
@@ -44,6 +45,66 @@ def advice(actual: dict[str, float | None], target: dict[str, float]) -> str:
     if diff["Calories"] > 0:
         return "三大營養素已達最低，熱量尚差；可補少量主食。"
     return "已達每日最低目標；蛋白質足夠，不需補充乳清。"
+
+
+def display_text(value) -> str:
+    return "" if value is None else str(value)
+
+
+def read_menu_plan(workbook) -> dict | None:
+    """Read the compact menu reference sheet for the static website."""
+
+    if "菜單規劃" not in workbook.sheetnames:
+        return None
+    menu = workbook["菜單規劃"]
+
+    def rows(start: int, end: int) -> list[dict[str, str]]:
+        return [
+            {key: display_text(menu.cell(row, column).value) for column, key in enumerate(MENU_HEADERS, 1)}
+            for row in range(start, end + 1)
+        ]
+
+    def total(row: int) -> dict[str, str]:
+        return {
+            "chicken": display_text(menu.cell(row, 3).value),
+            "rice": display_text(menu.cell(row, 4).value),
+            "riceCup": display_text(menu.cell(row, 5).value),
+            "other": display_text(menu.cell(row, 6).value),
+            "greens": display_text(menu.cell(row, 7).value),
+        }
+
+    weekly = []
+    for row in range(26, 33):
+        weekly.append({
+            "day": display_text(menu.cell(row, 1).value),
+            "type": display_text(menu.cell(row, 2).value),
+            "chicken": display_text(menu.cell(row, 3).value),
+            "rice": display_text(menu.cell(row, 4).value),
+            "mackerel": display_text(menu.cell(row, 5).value),
+            "eggs": display_text(menu.cell(row, 6).value),
+        })
+
+    shopping = []
+    for row in range(37, 44):
+        shopping.append({
+            "item": display_text(menu.cell(row, 1).value),
+            "quantity": display_text(menu.cell(row, 2).value),
+        })
+
+    return {
+        "training": {
+            "title": display_text(menu.cell(4, 1).value),
+            "rows": rows(6, 11),
+            "total": total(12),
+        },
+        "rest": {
+            "title": display_text(menu.cell(15, 1).value),
+            "rows": rows(17, 20),
+            "total": total(21),
+        },
+        "weekly": weekly,
+        "shopping": shopping,
+    }
 
 
 def read_data(workbook_path: Path) -> dict:
@@ -93,6 +154,7 @@ def read_data(workbook_path: Path) -> dict:
     return {
         "generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
         "targetRanges": target_ranges,
+        "menuPlan": read_menu_plan(workbook),
         "days": days,
     }
 
