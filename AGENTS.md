@@ -6,8 +6,9 @@ This project is intentionally small. The primary artifact is `data/減脂追蹤.
 
 - `每日紀錄`: one row per date for Calories, Protein, Carbs, Fat, target minimums, differences, and advice.
 - `設定`: training/rest target ranges and a small retained basic-data section.
+- `菜單規劃`: the user's original training-day, rest-day, weekly schedule, and shopping reference.
 
-Do not reintroduce a food database, meal-level input, shopping list, dashboard, or weekly weight log unless the user explicitly asks for it.
+Do not reintroduce a food database, meal-level input, dashboard, or weekly weight log unless the user explicitly asks for it. The shopping reference belongs only in `菜單規劃`; it is not a daily input database.
 
 ## Editing rules
 
