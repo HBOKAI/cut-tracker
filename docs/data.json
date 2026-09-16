@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-09-16T01:58:14+08:00",
+  "targetRanges": {
+    "TRAINING": {
+      "Calories": {
+        "min": 2150.0,
+        "max": 2150.0
+      },
+      "Protein": {
+        "min": 165.0,
+        "max": 175.0
+      },
+      "Carbs": {
+        "min": 220.0,
+        "max": 240.0
+      },
+      "Fat": {
+        "min": 55.0,
+        "max": 65.0
+      }
+    },
+    "REST": {
+      "Calories": {
+        "min": 1850.0,
+        "max": 1850.0
+      },
+      "Protein": {
+        "min": 160.0,
+        "max": 170.0
+      },
+      "Carbs": {
+        "min": 150.0,
+        "max": 165.0
+      },
+      "Fat": {
+        "min": 55.0,
+        "max": 65.0
+      }
+    }
+  },
+  "days": []
+}

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#153f4b" />
+    <meta name="description" content="減脂飲食 Calories、Protein、Carbs、Fat 追蹤" />
+    <title>減脂飲食追蹤</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">CUT TRACKER</p>
+          <h1>減脂飲食追蹤</h1>
+          <p class="hero-copy">每天記四個數字，清楚知道還差多少。</p>
+        </div>
+        <div class="hero-mark" aria-hidden="true">01</div>
+      </header>
+
+      <section class="toolbar" aria-label="顯示設定">
+        <div>
+          <span class="toolbar-label">目標基準</span>
+          <div class="segmented" role="group" aria-label="選擇目標基準">
+            <button class="segment is-active" data-day-type="TRAINING" type="button">訓練日</button>
+            <button class="segment" data-day-type="REST" type="button">休息日</button>
+          </div>
+        </div>
+        <p class="updated">資料更新：<span id="updatedAt">讀取中…</span></p>
+      </section>
+
+      <section class="status-banner" id="statusBanner" aria-live="polite">
+        <span class="status-dot"></span>
+        <span id="statusText">正在讀取紀錄…</span>
+      </section>
+
+      <section class="kpi-grid" aria-label="四項每日攝取">
+        <article class="metric-card calories-card" data-metric-card="Calories">
+          <div class="metric-topline"><span>Calories</span><span class="metric-unit">kcal</span></div>
+          <div class="metric-value" data-value="Calories">—</div>
+          <div class="metric-target" data-target="Calories">目標 ≥ —</div>
+          <div class="progress-track"><div class="progress-fill" data-progress="Calories"></div></div>
+          <div class="metric-diff" data-diff="Calories">尚未記錄</div>
+        </article>
+        <article class="metric-card protein-card" data-metric-card="Protein">
+          <div class="metric-topline"><span>Protein</span><span class="metric-unit">g</span></div>
+          <div class="metric-value" data-value="Protein">—</div>
+          <div class="metric-target" data-target="Protein">目標 ≥ —</div>
+          <div class="progress-track"><div class="progress-fill" data-progress="Protein"></div></div>
+          <div class="metric-diff" data-diff="Protein">尚未記錄</div>
+        </article>
+        <article class="metric-card carbs-card" data-metric-card="Carbs">
+          <div class="metric-topline"><span>Carbs</span><span class="metric-unit">g</span></div>
+          <div class="metric-value" data-value="Carbs">—</div>
+          <div class="metric-target" data-target="Carbs">目標 ≥ —</div>
+          <div class="progress-track"><div class="progress-fill" data-progress="Carbs"></div></div>
+          <div class="metric-diff" data-diff="Carbs">尚未記錄</div>
+        </article>
+        <article class="metric-card fat-card" data-metric-card="Fat">
+          <div class="metric-topline"><span>Fat</span><span class="metric-unit">g</span></div>
+          <div class="metric-value" data-value="Fat">—</div>
+          <div class="metric-target" data-target="Fat">目標 ≥ —</div>
+          <div class="progress-track"><div class="progress-fill" data-progress="Fat"></div></div>
+          <div class="metric-diff" data-diff="Fat">尚未記錄</div>
+        </article>
+      </section>
+
+      <section class="insight-layout">
+        <article class="panel insight-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">TODAY'S NOTE</p>
+              <h2>今天的建議</h2>
+            </div>
+            <span class="date-pill" id="latestDate">尚無日期</span>
+          </div>
+          <p class="insight-text" id="adviceText">尚未有每日紀錄。完成今天的四項輸入後，這裡會顯示簡短建議。</p>
+          <div class="insight-meta">
+            <span id="latestDayType">等待紀錄</span>
+            <span id="latestRange">目標由設定頁帶入</span>
+          </div>
+        </article>
+
+        <article class="panel quick-panel">
+          <p class="section-kicker">NEXT STEP</p>
+          <h2>每日只要做一件事</h2>
+          <p>在 Excel 的「每日紀錄」填入 Calories、Protein、Carbs、Fat，再把更新後的檔案推送到 GitHub。</p>
+          <div class="formula-note"><span>差額</span><strong>目標最低值 − 實際</strong></div>
+        </article>
+      </section>
+
+      <section class="panel trend-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">RECENT TREND</p>
+            <h2>最近 7 次紀錄</h2>
+          </div>
+          <span class="legend"><i class="legend-line actual-line"></i>Calories <i class="legend-line target-line"></i>目標</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="trendChart" aria-label="最近七次 Calories 與目標趨勢圖"></canvas>
+          <div class="chart-empty" id="chartEmpty">有紀錄後，這裡會顯示 Calories 趨勢。</div>
+        </div>
+      </section>
+
+      <section class="panel records-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">LOG</p>
+            <h2>每日紀錄</h2>
+          </div>
+          <span class="record-count" id="recordCount">0 天</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>日型</th>
+                <th>Calories</th>
+                <th>Protein</th>
+                <th>Carbs</th>
+                <th>Fat</th>
+                <th>建議</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody"></tbody>
+          </table>
+          <div class="table-empty" id="tableEmpty">目前還沒有紀錄。</div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>資料只包含飲食宏量，不公開個人基本資料。</span>
+        <span>GitHub Pages 靜態檢視</span>
+      </footer>
+    </main>
+  </body>
+</html>
