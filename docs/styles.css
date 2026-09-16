@@ -143,6 +143,24 @@ h2 { margin-bottom: 0; font-size: 21px; letter-spacing: -0.025em; }
 .formula-note { display: flex; justify-content: space-between; gap: 10px; padding: 13px 14px; color: #946347; border: 1px solid #f2d9c9; border-radius: 11px; background: var(--orange-soft); font-size: 12px; }
 .formula-note strong { color: #7d4c31; }
 
+.menu-section { display: grid; gap: 16px; margin-top: 16px; }
+.menu-panel, .weekly-panel { padding: 26px; }
+.menu-panel .section-kicker, .weekly-panel .section-kicker { color: var(--teal); }
+.menu-table { min-width: 1010px; }
+.menu-table th, .menu-table td { vertical-align: top; }
+.menu-note { max-width: 250px; color: var(--muted); white-space: normal; line-height: 1.5; }
+.menu-total { margin-top: 18px; padding: 13px 14px; color: #47716f; border: 1px solid #cce8e0; border-radius: 11px; background: #edf9f5; font-size: 12px; line-height: 1.7; }
+.weekly-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(250px, 0.75fr); gap: 22px; margin-top: 20px; }
+.weekly-layout h3 { margin: 0 0 10px; color: var(--ink); font-size: 14px; }
+.compact-table-scroll { margin-top: 0; }
+.compact-table { min-width: 530px; font-size: 12px; }
+.compact-table th, .compact-table td { padding: 10px 9px; }
+.shopping-block { padding-left: 20px; border-left: 1px solid var(--line); }
+.shopping-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.shopping-list li { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; color: var(--muted); border-bottom: 1px solid #edf2f1; font-size: 13px; }
+.shopping-list strong { color: var(--ink); font-weight: 700; text-align: right; }
+.menu-section[hidden] { display: none; }
+
 .trend-panel, .records-panel { margin-top: 16px; padding: 26px; }
 .trend-panel .section-kicker, .records-panel .section-kicker { color: var(--blue); }
 .legend { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; }
@@ -177,7 +195,10 @@ tbody tr:hover { background: #fafcfb; }
   .toolbar { align-items: flex-start; flex-direction: column; gap: 12px; }
   .updated { align-self: flex-end; }
   .insight-layout { grid-template-columns: 1fr; }
+  .weekly-layout { grid-template-columns: 1fr; }
+  .shopping-block { padding-top: 18px; padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .trend-panel, .records-panel, .insight-panel, .quick-panel { padding: 21px; }
+  .menu-panel, .weekly-panel { padding: 21px; }
   .footer { flex-direction: column; gap: 6px; }
 }
 

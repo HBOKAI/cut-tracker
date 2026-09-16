@@ -85,6 +85,72 @@ function renderInsight() {
   document.getElementById("adviceText").textContent = computeAdvice(latest.actual, state.dayType, state.data);
 }
 
+function renderMenuPlan() {
+  const section = document.getElementById("menuSection");
+  const menuPlan = state.data?.menuPlan;
+  if (!section || !menuPlan) {
+    if (section) section.hidden = true;
+    return;
+  }
+
+  const selected = menuPlan[state.dayType === "REST" ? "rest" : "training"];
+  if (!selected) {
+    section.hidden = true;
+    return;
+  }
+
+  section.hidden = false;
+  document.getElementById("menuTitle").textContent = selected.title || `${LABELS[state.dayType]}菜單`;
+  document.getElementById("menuTarget").textContent = `${LABELS[state.dayType]} ${targetText(state.data.targetRanges[state.dayType]?.Calories)}`;
+
+  const menuBody = document.getElementById("menuBody");
+  menuBody.replaceChildren();
+  selected.rows.forEach((item) => {
+    const row = document.createElement("tr");
+    [item.time, item.meal, item.chicken, item.rice, item.riceCup, item.other, item.greens, item.note].forEach((value, index) => {
+      row.append(cell(value || "—", index === 7 ? "menu-note" : ""));
+    });
+    menuBody.append(row);
+  });
+
+  const total = selected.total || {};
+  document.getElementById("menuTotal").textContent = [
+    "每日合計",
+    `雞胸 ${total.chicken || "—"}`,
+    `白飯 ${total.rice || "—"}`,
+    `生米 ${total.riceCup || "—"}`,
+    `其他 ${total.other || "—"}`,
+    `青菜 ${total.greens || "—"}`,
+  ].join("　");
+
+  const weeklyBody = document.getElementById("weeklyBody");
+  weeklyBody.replaceChildren();
+  (menuPlan.weekly || []).forEach((item) => {
+    const row = document.createElement("tr");
+    row.append(cell(item.day || "—"));
+    const typeCell = document.createElement("td");
+    const type = document.createElement("span");
+    type.className = `day-type${item.type === "休息日" ? " rest" : ""}`;
+    type.textContent = item.type || "—";
+    typeCell.append(type);
+    row.append(typeCell);
+    [item.chicken, item.rice, item.mackerel, item.eggs].forEach((value) => row.append(cell(value || "—")));
+    weeklyBody.append(row);
+  });
+
+  const shoppingList = document.getElementById("shoppingList");
+  shoppingList.replaceChildren();
+  (menuPlan.shopping || []).forEach((item) => {
+    const listItem = document.createElement("li");
+    const name = document.createElement("span");
+    name.textContent = item.item || "—";
+    const quantity = document.createElement("strong");
+    quantity.textContent = item.quantity || "—";
+    listItem.append(name, quantity);
+    shoppingList.append(listItem);
+  });
+}
+
 function cell(text, className = "") {
   const node = document.createElement("td");
   node.textContent = text;
@@ -198,6 +264,7 @@ function render() {
   setStatus(latest ? `已載入 ${state.data.days.length} 天，最新紀錄 ${formatDate(latest.date)}。` : "尚未有每日紀錄，先輸入今天的四項數值即可開始。");
   renderMetrics();
   renderInsight();
+  renderMenuPlan();
   renderTable();
   drawTrend();
 }
