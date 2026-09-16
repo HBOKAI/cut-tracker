@@ -59,10 +59,16 @@ class TrackerTests(unittest.TestCase):
 
         workbook = load_workbook(RUNTIME, data_only=False)
         worksheet = workbook["每日紀錄"]
-        self.assertEqual(worksheet.max_row, 5)
-        self.assertEqual(worksheet["B5"].value, "REST")
-        self.assertEqual(worksheet["C5"].value, 1900.0)
-        self.assertEqual(worksheet["F5"].value, 165.0)
+        matching_rows = [
+            row
+            for row in range(5, worksheet.max_row + 1)
+            if worksheet.cell(row, 1).value.date() == date(2026, 9, 17)
+        ]
+        self.assertEqual(matching_rows, [6])
+        row = matching_rows[0]
+        self.assertEqual(worksheet.cell(row, 2).value, "REST")
+        self.assertEqual(worksheet.cell(row, 3).value, 1900.0)
+        self.assertEqual(worksheet.cell(row, 6).value, 165.0)
 
     def test_missing_new_day_values_is_rejected(self):
         result = self.run_log("2026-09-18 訓練日")
