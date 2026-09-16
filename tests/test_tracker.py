@@ -79,9 +79,12 @@ class TrackerTests(unittest.TestCase):
 
         payload = read_data(SOURCE)
         self.assertEqual(len(payload["menuPlan"]["training"]["rows"]), 6)
-        self.assertEqual(len(payload["menuPlan"]["rest"]["rows"]), 4)
+        self.assertEqual(len(payload["menuPlan"]["rest"]["rows"]), 3)
+        self.assertEqual(payload["menuPlan"]["rest"]["rows"][1]["meal"], "下午茶")
         self.assertEqual(len(payload["menuPlan"]["weekly"]), 7)
         self.assertEqual(len(payload["menuPlan"]["shopping"]), 7)
+        self.assertEqual(len(payload["menuPlan"]["replacements"]), 3)
+        self.assertEqual(payload["menuPlan"]["replacements"][0]["item"], "711 鮪魚飯糰")
 
 
 if __name__ == "__main__":
