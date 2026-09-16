@@ -9,6 +9,8 @@ import unittest
 
 from openpyxl import load_workbook
 
+from scripts.export_web_data import read_data
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data" / "減脂追蹤.xlsx"
@@ -66,6 +68,20 @@ class TrackerTests(unittest.TestCase):
         result = self.run_log("2026-09-18 訓練日")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("請輸入至少一項數值", result.stdout)
+
+    def test_menu_plan_is_available_in_workbook_and_web_data(self):
+        workbook = load_workbook(SOURCE, data_only=False)
+        self.assertIn("菜單規劃", workbook.sheetnames)
+        menu = workbook["菜單規劃"]
+        self.assertEqual(menu["A4"].value, "訓練日菜單｜晚上重訓")
+        self.assertEqual(menu["A15"].value, "休息日菜單")
+        self.assertEqual(menu["A24"].value, "每週安排")
+
+        payload = read_data(SOURCE)
+        self.assertEqual(len(payload["menuPlan"]["training"]["rows"]), 6)
+        self.assertEqual(len(payload["menuPlan"]["rest"]["rows"]), 4)
+        self.assertEqual(len(payload["menuPlan"]["weekly"]), 7)
+        self.assertEqual(len(payload["menuPlan"]["shopping"]), 7)
 
 
 if __name__ == "__main__":
