@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import copy
 from pathlib import Path
 import sys
 
@@ -32,10 +33,9 @@ TRAINING_ROWS = [
 ]
 
 REST_ROWS = [
-    ["07:30", "早餐", "—", "100 g", "約 0.30 杯", "全蛋 2 顆＋乳清 1 scoop", "—", "休息日仍保留碳水"],
     ["12:30", "午餐", "150 g（半盒）", "200 g", "約 0.60 杯", "鯖魚日加台糖水煮鯖魚 1/2 罐", "300 g", "鯖魚每週 3 次即可"],
+    ["16:00", "下午茶", "—", "100 g", "約 0.30 杯", "全蛋 2 顆＋乳清 1–1.5 scoop", "—", "把原早餐內容移到下午茶；若蛋白質不足再補 0.5 scoop"],
     ["18:30", "晚餐", "150 g（半盒）", "150 g", "約 0.45 杯", "全蛋 2 顆", "300 g", ""],
-    ["21:30", "睡前", "—", "—", "—", "乳清 0.5–1 scoop", "—", "依當天蛋白質攝取調整"],
 ]
 
 WEEKLY_ROWS = [
@@ -56,6 +56,12 @@ SHOPPING_ROWS = [
     ["香蕉", "至少 4 根"],
     ["青菜", "約 3.4 kg/週以上"],
     ["乳清", "約 11–14 scoop/週"],
+]
+
+REPLACEMENT_ROWS = [
+    ["711 鮪魚飯糰", "白飯＋部分蛋白質", "1 顆", "可放午餐或下午茶；蛋白質不足時再補乳清或無糖豆漿", "依包裝", "依包裝", "依包裝", "不同口味與大小以包裝標示為準"],
+    ["雞胗", "雞胸", "150–200 g", "選清滷或少油版本，替代一份雞胸；當天脂肪偏高時減少額外油脂", "依份量", "—", "依烹調", "注意滷汁、麻油與其他調味"],
+    ["地瓜", "白飯", "150–200 g", "可放午餐或下午茶，依當日 Carbs 差額調整份量", "—", "依份量", "—", "以熟重估算，實際仍以紀錄值為準"],
 ]
 
 
@@ -159,7 +165,7 @@ def build_menu_sheet(workbook):
         worksheet.cell(rest_total, col).alignment = Alignment(vertical="center", wrap_text=col == 6)
     worksheet.row_dimensions[rest_total].height = 34
 
-    week_section = rest_total + 3
+    week_section = 24
     style_section(worksheet, week_section, "F", "每週安排")
     week_header = week_section + 1
     for col, header in enumerate(["星期", "類型", "雞胸", "生米", "鯖魚", "蛋"], 1):
@@ -174,6 +180,21 @@ def build_menu_sheet(workbook):
     worksheet.cell(shopping_header, 2, "數量")
     style_headers(worksheet, shopping_header, 2)
     write_rows(worksheet, shopping_header + 1, SHOPPING_ROWS, 2)
+
+    replacement_section = shopping_header + len(SHOPPING_ROWS) + 3
+    style_section(worksheet, replacement_section, "H", "替換方案")
+    replacement_header = replacement_section + 1
+    replacement_headers = ["替換食物", "可替代", "建議份量", "使用方式", "蛋白質", "碳水", "脂肪", "備註"]
+    for col, header in enumerate(replacement_headers, 1):
+        worksheet.cell(replacement_header, col, header)
+    style_headers(worksheet, replacement_header, 8)
+    write_rows(worksheet, replacement_header + 1, REPLACEMENT_ROWS, 8)
+    for row in range(replacement_header + 1, replacement_header + 1 + len(REPLACEMENT_ROWS)):
+        for column in (4, 8):
+            alignment = copy(worksheet.cell(row, column).alignment)
+            alignment.wrap_text = True
+            worksheet.cell(row, column).alignment = alignment
+        worksheet.row_dimensions[row].height = 48
 
     widths = {"A": 15, "B": 16, "C": 18, "D": 16, "E": 16, "F": 38, "G": 14, "H": 30}
     for column, width in widths.items():

@@ -16,6 +16,7 @@ DEFAULT_WORKBOOK = ROOT / "data" / "減脂追蹤.xlsx"
 DEFAULT_OUTPUT = ROOT / "docs" / "data.json"
 TARGET_ROWS = {"Calories": 12, "Protein": 13, "Carbs": 14, "Fat": 15}
 MENU_HEADERS = ["time", "meal", "chicken", "rice", "riceCup", "other", "greens", "note"]
+REPLACEMENT_HEADERS = ["item", "replaces", "portion", "howToUse", "protein", "carbs", "fat", "note"]
 
 
 def as_date(value) -> date | None:
@@ -91,6 +92,13 @@ def read_menu_plan(workbook) -> dict | None:
             "quantity": display_text(menu.cell(row, 2).value),
         })
 
+    replacements = []
+    for row in range(48, 51):
+        replacements.append({
+            key: display_text(menu.cell(row, column).value)
+            for column, key in enumerate(REPLACEMENT_HEADERS, 1)
+        })
+
     return {
         "training": {
             "title": display_text(menu.cell(4, 1).value),
@@ -99,11 +107,12 @@ def read_menu_plan(workbook) -> dict | None:
         },
         "rest": {
             "title": display_text(menu.cell(15, 1).value),
-            "rows": rows(17, 20),
-            "total": total(21),
+            "rows": rows(17, 19),
+            "total": total(20),
         },
         "weekly": weekly,
         "shopping": shopping,
+        "replacements": replacements,
     }
 
 
